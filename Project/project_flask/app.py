@@ -119,10 +119,13 @@ def checkout():
 def showOrders():
     connector = connectToDatabase()
     cursor = connector.cursor()
-    query = "select * from Customers;"
+    query = "select * from Orders;"
     cursor.execute(query)
-    for row in connector:
-        return f"<p> {escape(row)} </p>"
+    row = cursor.fetchall()
+    html = ""
+    for i in row:
+        html += f"<p> {escape(i)} </p>"
+    return html
     
 if __name__ == "__main__":
     app.run(debug=True)
