@@ -10,9 +10,10 @@ app = Flask(__name__)
 def hello_world():
     connector = connectToDatabase()
 
-@app.route("/", methods=['GET'])
+@app.route("/Orders", methods=['GET'])
 def hello_world():
     connector = connectToDatabase()
+    connector.
 
 
     
