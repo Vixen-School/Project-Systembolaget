@@ -10,14 +10,18 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     connector = connectToDatabase()
+    return "<p> Hello world! </p>"
 
 @app.route("/Orders", methods=['GET', 'POST'])
 def showOrders():
     connector = connectToDatabase()
     cursor = connector.cursor()
-    query = "select * from Customers;"
+    query = "select * from Orders;"
     cursor.execute(query)
-    for row in connector:
-        return f"<p> {escape(row)} </p>"
+    row = cursor.fetchall()
+    html = ""
+    for i in row:
+        html += f"<p> {escape(i)} </p>"
+    return html
 
     
