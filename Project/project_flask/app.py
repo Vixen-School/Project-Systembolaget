@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, redirect, session
 from db import get_db_connection
+from connect import connectToDatabase
+from markupsafe import escape
 
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
@@ -113,5 +115,14 @@ def checkout():
     <a href="/">Tillbaka till startsidan</a>
     """
 
+@app.route("/Orders", methods=['GET', 'POST'])
+def showOrders():
+    connector = connectToDatabase()
+    cursor = connector.cursor()
+    query = "select * from Customers;"
+    cursor.execute(query)
+    for row in connector:
+        return f"<p> {escape(row)} </p>"
+    
 if __name__ == "__main__":
     app.run(debug=True)

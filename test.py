@@ -1,7 +1,7 @@
 from flask import request
 from flask import Flask
 import mysql.connector as connector
-from connect import connectToDatabase
+from Project.project_flask.connect import connectToDatabase
 from markupsafe import escape
 
 
