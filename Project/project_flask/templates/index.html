@@ -1,0 +1,17 @@
+<h1>Grupp 7 – Systembolaget</h1>
+
+<form method="GET">
+    <input type="text" name="q" placeholder="Sök produkt..." value="{{ search }}">
+    <button>Sök</button>
+</form>
+
+<hr>
+
+{% for product in products %}
+    <p>{{ product.name }} ({{ product.category }}) – {{ product.price }} kr</p>
+    <form action="/add_order" method="POST">
+        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+        <input type="number" name="quantity" value="1" min="1">
+        <button type="submit">Lägg i varukorg</button>
+    </form>
+{% endfor %}
