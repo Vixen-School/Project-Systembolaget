@@ -1,0 +1,17 @@
+<h1>Varukorg</h1>
+
+{% for item in items %}
+  <p>
+    {{ item.name }} – {{ item.price }} kr × {{ item.quantity }}
+    = {{ item.subtotal }} kr
+  </p>
+{% endfor %}
+
+<hr>
+<h3>Total: {{ total }} kr</h3>
+
+<form action="/checkout" method="POST">
+  <button type="submit">Slutför köp</button>
+</form>
+
+<a href="/">Fortsätt handla</a>
