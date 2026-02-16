@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Produkter i Kategori</title>
+</head>
+<body>
+    <h1>Produkter i Kategori ID: {{ category_id }}</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            {{ product.name }} - {{ product.price }} SEK
+            <form action="/add_order" method="POST" style="display: inline;">
+                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Lägg till i varukorg</button>
+            </form>
+            <a href="/price_history/{{ product.product_id }}">Visa prishistorik</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Tillbaka till startsidan</a>
+</body>
+</html>
