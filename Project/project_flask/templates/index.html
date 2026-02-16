@@ -1,17 +1,29 @@
-<h1>Grupp 7 – Systembolaget</h1>
-
-<form method="GET">
-    <input type="text" name="q" placeholder="Sök produkt..." value="{{ search }}">
-    <button>Sök</button>
-</form>
-
-<hr>
-
-{% for product in products %}
-    <p>{{ product.name }} ({{ product.category }}) – {{ product.price }} kr</p>
-    <form action="/add_order" method="POST">
-        <input type="hidden" name="product_id" value="{{ product.product_id }}">
-        <input type="number" name="quantity" value="1" min="1">
-        <button type="submit">Lägg i varukorg</button>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Startsida</title>
+</head>
+<body>
+    <h1>Välkommen till vår butik!</h1>
+    <form action="/" method="GET">
+        <input type="text" name="q" placeholder="Sök efter produkter..." value="{{ search }}">
+        <button type="submit">Sök</button>
     </form>
-{% endfor %}
+    <ul>
+        {% for product in products %}
+        <li>
+            {{ product.name }} - {{ product.price }} SEK
+            <form action="/add_order" method="POST" style="display: inline;">
+                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Lägg till i varukorg</button>
+            </form>
+            <a href="/price_history/{{ product.product_id }}">Visa prishistorik</a>
+            <a href="/product_sales/{{ product.product_id }}">Visa försäljningsstatistik</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/cart">Visa varukorg</a>
+    <a href="/revenue_by_category">Visa intäkter per kategori</a>
+</body>
+</html>
