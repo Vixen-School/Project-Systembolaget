@@ -1,0 +1,18 @@
+<h1>Grupp 7 – Systembolaget</h1>
+
+<form method="GET">
+    <input type="text" name="q" placeholder="Sök produkt..." value="{{ search }}">
+    <button>Sök</button>
+</form>
+
+<hr>
+
+{% for orders in OrderItem %}
+    <p>{{ Customer.customer_id }} ({{ OrderItem.quantity }}) – {{ Orders.order_date }} kr</p>
+    <form action="/Orders" method="POST">
+        <input type="hidden" name="Customer" value="{{ product.product_id }}">
+        <input type="number" name="quantity" value="{{ OrderItem.quantity }}">
+        <input type="hidden" name="Date" value="{{ OrderItem.order_date }}">
+        <button type="submit">Lägg i varukorg</button>
+    </form>
+{% endfor %}

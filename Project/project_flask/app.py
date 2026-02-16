@@ -10,7 +10,8 @@ app.secret_key = "hemligt123"  # behövs för sessioner
 @app.route("/", methods=["GET"])
 def index():
     search = request.args.get("q", "")
-    conn = get_db_connection()
+    ##conn = get_db_connection()
+    conn = connectToDatabase()
     cursor = conn.cursor(dictionary=True)
     if search:
         cursor.execute("""
@@ -119,7 +120,8 @@ def checkout():
 def showOrders():
     connector = connectToDatabase()
     cursor = connector.cursor()
-    query = "select * from Orders;"
+    query = """select Orders.customer_id, OrderItem.product_id, OrderItem.quantity, Orders.order_date from Orders, OrderItem where Orders.order_id = OrderItem.order_id;
+"""
     cursor.execute(query)
     row = cursor.fetchall()
     html = ""
