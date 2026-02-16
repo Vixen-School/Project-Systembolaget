@@ -224,5 +224,23 @@ def category(category_id):
     conn.close()
     return render_template("category.html", products=products, category_id=category_id)
 
+@app.route('/price_history/<int:product_id>')
+def price_history(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.callproc('GetPriceHistory', (product_id,))
+        price_history = cursor.fetchall()
+        if not price_history:
+            return "Ingen prishistorik hittades för denna produkt."
+    except Exception as e:
+        return f"Ett fel uppstod: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+
+    return render_template('price_history.html', price_history=price_history, product_id=product_id)
+
 if __name__ == "__main__":
     app.run(debug=True)
