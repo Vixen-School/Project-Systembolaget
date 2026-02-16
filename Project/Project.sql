@@ -49,6 +49,15 @@ create table OrderItem (
     foreign key (product_id) references Product(product_id)
 );
 
+create table PriceHistory (
+	price_history_id int auto_increment primary key,
+    product_id int not null,
+    old_price decimal(6, 2) not null,
+    new_price decimal(6, 2) not null,
+    change_date datetime not null,
+    foreign key (product_id) references Product(product_id)
+);
+
 insert into Category (name) Values
 ('Vin'),
 ('Öl'),
@@ -394,3 +403,73 @@ insert into Product (name, country, price, volume_ml, alcohol_percent, category_
 ('Skåne, Alkoholfri Snaps', 'Sverige', 69, 350, 0, 5, 48),
 ('O.P. Anderson, Alkoholfri Snaps Mixpack', 'Sverige', 109, 300, 0, 5, 48);
 
+
+-- Aggregationsfunktioner
+-- Updatera pris historiken
+DELIMITER $$
+create trigger update_price_history
+before update on Product
+for each row
+begin
+	if new.price != old.price then
+		insert into PriceHistory (product_id, old_price, new_price, change_date)
+        values (old.product_id, old.price, new.price, now());
+	end if;
+end $$
+DELIMITER ;,
+
+-- Totala intäkter per kategori
+select c.name as category_name, sum(p.price * oi.quantity) as total_revenue
+from Category c
+join Subcategory sc on c.category_id = sc.category_id
+join Product p on sc.subcategory_id = p.subcategory_id
+join OrderItem oi on p.product_id = oi.product_id
+group by c.name;
+
+-- Mest sålda produkter
+select p.name, sum(oi.quantity) as total_quantity_sold
+from Product p
+join OrderItem oi on p.product_id = oi.product_id
+group by p.name
+order by total_quantity_sold desc
+limit 10;
+
+-- Genomsnittligt pris per kategori
+select c.name as category_name, avg(p.price) as average_price
+from Category c
+join Subcategory sc on c.category_id = sc_category_id
+join Product p on sc.subcategory_id = p.subcategory_id
+group by c.name;
+
+-- Total försäljning per månad
+select date_format(o.order_date, '%Y-%m') as month, sum(p.price * oi.quantity) as total_sales
+from Orders o
+join OrderItem oi on o.order_id = oi.order_id
+join Product p on oi.product_id = p.product_id
+group by month
+order by month;
+
+-- Procedur för att hämta prishistorik för en produkt
+DELIMITER $$
+create procedure GetPriceHistory(in product_id_param int)
+begin
+	select ph.change_date, ph.old_price, ph.new_price
+    from PriceHistory ph
+    where ph.product_id = product_id_param
+    order by ph.change_date desc;
+end $$
+DELIMITER ;
+
+-- Anropa proceduren
+call GetPriceHistory(1);
+
+-- Vyer (Views)
+create view ProductSales as
+select p.product_id, p.name, sum(oi.quantity) as total_quantity_sold, 
+sum(p.price * oi.quantity) as total_revenue
+from Product p
+join OrderItem oi on p.product_id = oi.product_id
+group by p.product_id, p.name;
+
+-- Använd vyn
+select * from ProductSales;
