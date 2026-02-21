@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Försäljningsstatistik per Kategori</title>
+</head>
+<body>
+    <h1>Försäljningsstatistik för Kategori ID: {{ category_id }}</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Produktnamn</th>
+                <th>Total Såld Kvantitet</th>
+                <th>Total Intäkt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in sales_by_category %}
+            <tr>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.total_quantity_sold }}</td>
+                <td>{{ product.total_revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Tillbaka till startsidan</a>
+</body>
+</html>

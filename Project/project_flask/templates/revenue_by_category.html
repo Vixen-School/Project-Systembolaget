@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Intäkter per Kategori</title>
+</head>
+<body>
+    <h1>Intäkter per Kategori</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Kategorinamn</th>
+                <th>Total Intäkt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in revenue_by_category %}
+            <tr>
+                <td>{{ category.category_name }}</td>
+                <td>{{ category.total_revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Tillbaka till startsidan</a>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prishistorik</title>
+</head>
+<body>
+    <h1>Prishistorik för Produkt ID: {{ product_id }}</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Ändringsdatum</th>
+                <th>Gammalt Pris</th>
+                <th>Nytt Pris</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in price_history %}
+            <tr>
+                <td>{{ record.change_date }}</td>
+                <td>{{ record.old_price }}</td>
+                <td>{{ record.new_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Tillbaka till startsidan</a>
+</body>
+</html>

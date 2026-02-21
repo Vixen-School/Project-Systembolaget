@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Startsida</title>
+    <title>Produkter i Kategori</title>
 </head>
 <body>
-    <h1>Välkommen till vår butik!</h1>
-    <form action="/" method="GET">
-        <input type="text" name="q" placeholder="Sök efter produkter..." value="{{ search }}">
-        <button type="submit">Sök</button>
-    </form>
+    <h1>Produkter i Kategori ID: {{ category_id }}</h1>
     <ul>
         {% for product in products %}
         <li>
@@ -19,11 +15,9 @@
                 <button type="submit">Lägg till i varukorg</button>
             </form>
             <a href="/price_history/{{ product.product_id }}">Visa prishistorik</a>
-            <a href="/product_sales/{{ product.product_id }}">Visa försäljningsstatistik</a>
         </li>
         {% endfor %}
     </ul>
-    <a href="/cart">Visa varukorg</a>
-    <a href="/revenue_by_category">Visa intäkter per kategori</a>
+    <a href="/">Tillbaka till startsidan</a>
 </body>
 </html>

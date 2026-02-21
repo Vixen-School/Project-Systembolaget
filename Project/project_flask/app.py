@@ -129,5 +129,134 @@ def showOrders():
         html += f"<p> {escape(i)} </p>"
     return html
     
+@app.route('/price_history/<int:product_id>')
+def price_history(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Hämta prishistorik för en produkt
+    cursor.callproc('GetPriceHistory', (product_id,))
+    price_history = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('price_history.html', price_history=price_history, product_id=product_id)
+
+@app.route('/product_sales/<int:product_id>')
+def product_sales(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Hämta försäljningsstatistik för en produkt
+    query = """
+    SELECT product_id, name, total_quantity_sold, total_revenue
+    FROM ProductSales
+    WHERE product_id = %s
+    """
+    cursor.execute(query, (product_id,))
+    product_sales = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('product_sales.html', product_sales=product_sales)
+
+@app.route('/sales_by_category/<int:category_id>')
+def sales_by_category(category_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Hämta försäljningsstatistik för en kategori
+    query = """
+    SELECT p.name AS product_name, SUM(oi.quantity) AS total_quantity_sold, SUM(p.price * oi.quantity) AS total_revenue
+    FROM Product p
+    JOIN OrderItem oi ON p.product_id = oi.product_id
+    WHERE p.category_id = %s
+    GROUP BY p.name
+    """
+    cursor.execute(query, (category_id,))
+    sales_by_category = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('sales_by_category.html', sales_by_category=sales_by_category, category_id=category_id)
+
+@app.route('/revenue_by_category')
+def revenue_by_category():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Hämta totala intäkter per kategori
+    query = """
+    SELECT c.name AS category_name, SUM(p.price * oi.quantity) AS total_revenue
+    FROM Category c
+    JOIN Subcategory sc ON c.category_id = sc.category_id
+    JOIN Product p ON sc.subcategory_id = p.subcategory_id
+    JOIN OrderItem oi ON p.product_id = oi.product_id
+    GROUP BY c.name
+    """
+    cursor.execute(query)
+    revenue_by_category = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('revenue_by_category.html', revenue_by_category=revenue_by_category)
+
+@app.route('/price_history/<int:product_id>')
+def price_history(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.callproc('GetPriceHistory', (product_id,))
+        price_history = cursor.fetchall()
+        if not price_history:
+            return "Ingen prishistorik hittades för denna produkt."
+    except Exception as e:
+        return f"Ett fel uppstod: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+
+    return render_template('price_history.html', price_history=price_history, product_id=product_id)
+
+@app.route("/category/<int:category_id>")
+def category(category_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT p.product_id, p.name, p.price, c.name AS category
+        FROM Product p
+        JOIN Category c ON p.category_id = c.category_id
+        WHERE p.category_id = %s
+    """, (category_id,))
+    products = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return render_template("category.html", products=products, category_id=category_id)
+
+@app.route('/price_history/<int:product_id>')
+def price_history(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.callproc('GetPriceHistory', (product_id,))
+        price_history = cursor.fetchall()
+        if not price_history:
+            return "Ingen prishistorik hittades för denna produkt."
+    except Exception as e:
+        return f"Ett fel uppstod: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+
+    return render_template('price_history.html', price_history=price_history, product_id=product_id)
+
 if __name__ == "__main__":
     app.run(debug=True)
