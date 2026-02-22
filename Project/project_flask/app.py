@@ -3,8 +3,13 @@ from db import get_db_connection
 from connect import connectToDatabase
 from markupsafe import escape
 
+LOGIN_NR = 3 #default customer_id
+
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
+
+def loginfunc(customer_id):
+    LOGIN_NR = customer_id
 
 # Startsida med alla produkter
 @app.route("/", methods=["GET"])
@@ -34,7 +39,7 @@ def index():
 # Lägg till produkt i varukorg
 @app.route("/add_order", methods=["POST"])
 def add_order():
-    customer_id = 1  # hårdkodat exempel, kan bytas mot login
+    customer_id = 3  # hårdkodat exempel, kan bytas mot login
     product_id = request.form["product_id"]
     quantity = int(request.form["quantity"])
 
@@ -50,7 +55,7 @@ def add_order():
     if order:
         order_id = order["order_id"]
     else:
-        cursor.execute("INSERT INTO Orders (customer_id, order_date) VALUES (%s, CURDATE())", (customer_id,))
+        cursor.execute("INSERT INTO Orders (customer_id, order_date) VALUES (%s, DATE_ADD(CURDATE(), INTERVAL 3 DAY))", (customer_id,))
         order_id = cursor.lastrowid
 
     # Lägg till produkt i OrderItem
@@ -75,7 +80,7 @@ def cart():
     cursor.execute("""
         SELECT order_id
         FROM Orders
-        WHERE customer_id=%s AND order_date=CURDATE()
+        WHERE customer_id=%s AND order_date=curdate()
     """, (customer_id,))
     order = cursor.fetchone()
 
@@ -128,20 +133,7 @@ def showOrders():
     for i in row:
         html += f"<p> {escape(i)} </p>"
     return html
-    
-@app.route('/price_history/<int:product_id>')
-def price_history(product_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
 
-    # Hämta prishistorik för en produkt
-    cursor.callproc('GetPriceHistory', (product_id,))
-    price_history = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return render_template('price_history.html', price_history=price_history, product_id=product_id)
 
 @app.route('/product_sales/<int:product_id>')
 def product_sales(product_id):
@@ -240,23 +232,29 @@ def category(category_id):
     conn.close()
     return render_template("category.html", products=products, category_id=category_id)
 
-@app.route('/price_history/<int:product_id>')
-def price_history(product_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+@app.route('/UserHistory/')
+@app.route('/UserHistory/<int:customer_id>')
+def UserHistory(customer_id):
+    if customer_id is None:
+        customer_id = LOGIN_NR
+    connector = connectToDatabase()
+    cursor = connector.cursor()
+    cursor.execute("""select customer.name from customer where customer.customer_id = %s""",(customer_id,))
+    name = cursor.fetchall()
+    while cursor.nextset():
+        pass
+    cursor.callproc("OldAndNewOrders",(customer_id,))
+    res = list(cursor.stored_results())
+    print(res)
+    new = res[0].fetchall() if len(res) > 0 else []
+    old = res[1].fetchall() if len(res) > 1 else []
+    cursor.close()
+    return render_template("orderHistory.html",name=name, old=old, new=new)
 
-    try:
-        cursor.callproc('GetPriceHistory', (product_id,))
-        price_history = cursor.fetchall()
-        if not price_history:
-            return "Ingen prishistorik hittades för denna produkt."
-    except Exception as e:
-        return f"Ett fel uppstod: {e}"
-    finally:
-        cursor.close()
-        conn.close()
-
-    return render_template('price_history.html', price_history=price_history, product_id=product_id)
+@app.route('/login/', methods=['GET'])
+def login():
+    return render_template("login.html")
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

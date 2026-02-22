@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Försäljningsstatistik</title>
+</head>
+<body>
+    <h1>Order historik för : {{ name[0][0] }}</h1>
+    {% if new %}
+    <p>Pågående ordrar:</p>
+    {% for newrows in new %}
+    <p> Antal:{{ newrows[0] }} produkt id:{{ newrows[1] }}</p>
+    {% endfor %}
+    {% endif %}
+    <h1>------------------------------------------</h1>
+    {% if old %}
+    <p>Tidigare ordrar:</p>
+    {% for oldrows in old %}
+    <p>Antal: {{ oldrows[0] }} Produkt id: {{oldrows[1]}}</p>
+    {% endfor %}
+    {% endif %}
+    <a href="/">Tillbaka till startsidan</a>
+</body>
+</html>

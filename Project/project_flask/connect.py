@@ -7,7 +7,7 @@ def connectToDatabase():
             host="127.0.0.1",
             port=3306,
             user="root",
-            password="Tomten99",
+            password="Gemigenöl9701",
             database="dv1663_project")
         return connector
     except Error as e:

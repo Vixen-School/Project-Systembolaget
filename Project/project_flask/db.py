@@ -5,7 +5,7 @@ def get_db_connection():
         host="localhost",
         user="root",
         password="Gemigenöl9701",
-        database="dv1587-project"
+        database="dv1587-project" #dv1663_project
     )
     return connect
 
