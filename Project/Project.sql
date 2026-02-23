@@ -533,4 +533,4 @@ join product on orderitem.product_id = product.product_id where Orders.order_dat
 #Old orders
 select  orderitem.quantity, product.product_id  from orderitem join Orders on Orders.order_id = orderitem.order_id
 join product on orderitem.product_id = product.product_id where Orders.order_date < curdate() and Orders.customer_id = customer;
-end %%
+end %% 
