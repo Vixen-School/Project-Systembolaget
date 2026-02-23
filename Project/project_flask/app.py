@@ -3,13 +3,18 @@ from db import get_db_connection
 from connect import connectToDatabase
 from markupsafe import escape
 
-LOGIN_NR = 3 #default customer_id
+LOGIN_NR = None #default customer_id
 
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
 
-def loginfunc(customer_id):
-    LOGIN_NR = customer_id
+@app.route("/loginfunc/")
+def loginfunc():
+    global LOGIN_NR
+    LOGIN_NR = request.args.get('q')
+    print(LOGIN_NR)
+    return redirect('/')
+
 
 # Startsida med alla produkter
 @app.route("/", methods=["GET"])
@@ -234,7 +239,7 @@ def category(category_id):
 
 @app.route('/UserHistory/')
 @app.route('/UserHistory/<int:customer_id>')
-def UserHistory(customer_id):
+def UserHistory(customer_id = None):
     if customer_id is None:
         customer_id = LOGIN_NR
     connector = connectToDatabase()
