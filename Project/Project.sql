@@ -521,3 +521,16 @@ group by p.product_id, p.name;
 
 -- Använd vyn
 select * from ProductSales;
+
+
+-- procedure för gamla och väntande ordrar
+delimiter %%
+create procedure OldAndNewOrders(in customer int)
+begin
+#Orders in process
+select  orderitem.quantity, product.product_id  from orderitem join Orders on Orders.order_id = orderitem.order_id
+join product on orderitem.product_id = product.product_id where Orders.order_date > curdate() and Orders.customer_id = customer;
+#Old orders
+select  orderitem.quantity, product.product_id  from orderitem join Orders on Orders.order_id = orderitem.order_id
+join product on orderitem.product_id = product.product_id where Orders.order_date < curdate() and Orders.customer_id = customer;
+end %%
