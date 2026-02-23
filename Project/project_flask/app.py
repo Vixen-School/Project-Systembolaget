@@ -239,9 +239,7 @@ def category(category_id):
 
 @app.route('/UserHistory/')
 @app.route('/UserHistory/<int:customer_id>')
-def UserHistory(customer_id = None):
-    if customer_id is None:
-        customer_id = LOGIN_NR
+def UserHistory(customer_id = LOGIN_NR):
     connector = connectToDatabase()
     cursor = connector.cursor()
     cursor.execute("""select customer.name from customer where customer.customer_id = %s""",(customer_id,))
