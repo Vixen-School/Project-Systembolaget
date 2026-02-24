@@ -3,7 +3,7 @@ from db import get_db_connection
 from connect import connectToDatabase
 from markupsafe import escape
 
-LOGIN_NR = None #default customer_id
+LOGIN_NR = 1 #default customer_id
 
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
@@ -44,7 +44,7 @@ def index():
 # Lägg till produkt i varukorg
 @app.route("/add_order", methods=["POST"])
 def add_order():
-    customer_id = 3  # hårdkodat exempel, kan bytas mot login
+    customer_id = 1  # hårdkodat exempel, kan bytas mot login
     product_id = request.form["product_id"]
     quantity = int(request.form["quantity"])
 
@@ -53,8 +53,10 @@ def add_order():
 
     # Kolla om det finns en öppen order för kunden idag
     cursor.execute("""
-        SELECT order_id FROM Orders
-        WHERE customer_id=%s AND order_date=CURDATE()
+    SELECT order_id FROM Orders
+    WHERE customer_id=%s
+    AND order_date=DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+    LIMIT 1;
     """, (customer_id,))
     order = cursor.fetchone()
     if order:
@@ -83,9 +85,11 @@ def cart():
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT order_id
-        FROM Orders
-        WHERE customer_id=%s AND order_date=curdate()
+    SELECT order_id
+    FROM Orders
+    WHERE customer_id=%s
+    AND order_date=DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+    LIMIT 1
     """, (customer_id,))
     order = cursor.fetchone()
 
