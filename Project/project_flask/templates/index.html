@@ -17,6 +17,16 @@
     </form>
     {% endfor %}
     </details>
+
+        <details>
+    <summary>Subcategories</summary>
+    {% for subcategory in subcategories %}
+    <form action="/" method="GET">
+        <button type="submit" name="q" value={{ subcategory.name }}>{{ subcategory.name }}</button>
+    </form>
+    {% endfor %}
+    </details>
+
     <ul>
         {% for product in products %}
         <li>
