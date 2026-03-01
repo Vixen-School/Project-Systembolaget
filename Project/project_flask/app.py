@@ -26,7 +26,6 @@ def index():
     cursor.execute("""select distinct category.name from category;""")
     categories = cursor.fetchall()
     cursor.nextset()
-    print(categories)
     if search:
         cursor.execute("""
             SELECT p.product_id, p.name, p.price, c.name AS category
@@ -48,7 +47,7 @@ def index():
 # Lägg till produkt i varukorg
 @app.route("/add_order", methods=["POST"])
 def add_order():
-    customer_id = 1  # hårdkodat exempel, kan bytas mot login
+    customer_id = LOGIN_NR  # hårdkodat exempel, kan bytas mot login
     product_id = request.form["product_id"]
     quantity = int(request.form["quantity"])
 
@@ -84,7 +83,7 @@ def add_order():
 # Visa varukorgen
 @app.route("/cart")
 def cart():
-    customer_id = 1
+    customer_id = LOGIN_NR
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -119,7 +118,7 @@ def cart():
 
 @app.route("/checkout", methods=["POST"])
 def checkout():
-    customer_id = 1
+    customer_id = LOGIN_NR
     conn = get_db_connection()
     cursor = conn.cursor()
 
