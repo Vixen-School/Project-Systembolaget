@@ -9,6 +9,19 @@
         <input type="text" name="q" placeholder="Sök efter produkter..." value="{{ search }}">
         <button type="submit">Sök</button>
     </form>
+    <details>
+    <summary>Meny</summary>
+    <form action="/" method="GET">
+        <button type="submit" name="q" value="Vin">Vin</button>
+    </form>
+    <form action="/" method="GET">
+        <button type="submit" name="q" value="Alternativ 2">Alternativ 2</button>
+    </form>
+    <form action="/" method="GET">
+        <button type="submit" name="q" value="Alternativ 3">Alternativ 3</button>
+    </form>
+    </details>
+
     <ul>
         {% for product in products %}
         <li>
