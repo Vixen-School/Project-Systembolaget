@@ -23,6 +23,10 @@ def index():
     ##conn = get_db_connection()
     conn = connectToDatabase()
     cursor = conn.cursor(dictionary=True)
+    cursor.execute("""select distinct category.name from category;""")
+    categories = cursor.fetchall()
+    cursor.nextset()
+    print(categories)
     if search:
         cursor.execute("""
             SELECT p.product_id, p.name, p.price, c.name AS category
@@ -39,7 +43,7 @@ def index():
     products = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template("index.html", products=products, search=search)
+    return render_template("index.html", products=products, search=search, categories=categories)
 
 # Lägg till produkt i varukorg
 @app.route("/add_order", methods=["POST"])

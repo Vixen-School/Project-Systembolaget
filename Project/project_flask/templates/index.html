@@ -10,18 +10,13 @@
         <button type="submit">Sök</button>
     </form>
     <details>
-    <summary>Meny</summary>
+    <summary>Categories</summary>
+    {% for category in categories %}
     <form action="/" method="GET">
-        <button type="submit" name="q" value="Vin">Vin</button>
+        <button type="submit" name="q" value={{ category.name }}>{{ category.name }}</button>
     </form>
-    <form action="/" method="GET">
-        <button type="submit" name="q" value="Alternativ 2">Alternativ 2</button>
-    </form>
-    <form action="/" method="GET">
-        <button type="submit" name="q" value="Alternativ 3">Alternativ 3</button>
-    </form>
+    {% endfor %}
     </details>
-
     <ul>
         {% for product in products %}
         <li>
