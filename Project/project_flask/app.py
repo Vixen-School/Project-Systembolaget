@@ -142,8 +142,10 @@ def checkout():
 def showOrders():
     connector = connectToDatabase()
     cursor = connector.cursor()
-    query = """select Orders.customer_id, OrderItem.product_id, OrderItem.quantity, Orders.order_date from Orders, OrderItem where Orders.order_id = OrderItem.order_id;
-"""
+    query = """select Orders.customer_id, OrderItem.product_id, OrderItem.quantity,
+      Orders.order_date from Orders, OrderItem
+      where Orders.order_id = OrderItem.order_id;
+    """
     cursor.execute(query)
     row = cursor.fetchall()
     html = ""
