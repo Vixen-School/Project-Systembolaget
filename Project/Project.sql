@@ -107,7 +107,13 @@ insert into Subcategory (name, category_id) values
 ('Cider & Blanddrycker', 5),
 ('Glögg & Andra Juldrycker', 5),
 ('Drinkar & Cocktail', 5),
-('Must', 5);
+('Must', 5),
+('Rött', 5),
+('Vitt', 5),
+('Rosé', 5),
+('Apertif & Bitter', 5),
+('Avec', 5),
+('Snaps', 5);
 
 insert into Customer(name, address, age) values
 ("Pelle", "Huvudgatan 1", 23),

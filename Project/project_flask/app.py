@@ -148,10 +148,7 @@ def showOrders():
     """
     cursor.execute(query)
     row = cursor.fetchall()
-    html = ""
-    for i in row:
-        html += f"<p> {escape(i)} </p>"
-    return html
+    return render_template("orders.html", orders=row)
 
 
 @app.route('/product_sales/<int:product_id>')

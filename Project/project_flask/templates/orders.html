@@ -7,12 +7,7 @@
 
 <hr>
 
-{% for orders in OrderItem %}
-    <p>{{ Customer.customer_id }} ({{ OrderItem.quantity }}) – {{ Orders.order_date }} kr</p>
-    <form action="/Orders" method="POST">
-        <input type="hidden" name="Customer" value="{{ product.product_id }}">
-        <input type="number" name="quantity" value="{{ OrderItem.quantity }}">
-        <input type="hidden" name="Date" value="{{ OrderItem.order_date }}">
-        <button type="submit">Lägg i varukorg</button>
-    </form>
+{% for order in orders %}
+    <p>Kundnummer: {{ order[0] }}, Produktnummer ({{ order[1] }}) – antal {{ order[2] }} - Order Placerad {{order[3]}}</p>
+    
 {% endfor %}
