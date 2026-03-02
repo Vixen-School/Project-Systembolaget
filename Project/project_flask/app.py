@@ -127,7 +127,10 @@ def checkout():
     customer_id = LOGIN_NR
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    cursor.execute("""DELETE FROM Orders
+    WHERE customer_id=%s
+    AND order_date=DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+    LIMIT 1""", (customer_id,))
     # Slutför köpet (ingen status → vi låter ordern vara kvar)
     # Enkelt skol-exempel: bara visa bekräftelse
     cursor.close()
