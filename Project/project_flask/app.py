@@ -4,6 +4,7 @@ from connect import connectToDatabase
 from markupsafe import escape
 
 LOGIN_NR = 1 #default customer_id
+PRODUCT_ID = 200 #Default product_id
 
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
@@ -150,9 +151,9 @@ def showOrders():
     row = cursor.fetchall()
     return render_template("orders.html", orders=row)
 
-
+@app.route('/product_sales/')
 @app.route('/product_sales/<int:product_id>')
-def product_sales(product_id):
+def product_sales(product_id = PRODUCT_ID):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -213,8 +214,9 @@ def revenue_by_category():
 
     return render_template('revenue_by_category.html', revenue_by_category=revenue_by_category)
 
+@app.route('price_history/')
 @app.route('/price_history/<int:product_id>')
-def price_history(product_id):
+def price_history(product_id = PRODUCT_ID):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
