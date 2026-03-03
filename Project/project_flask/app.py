@@ -214,7 +214,7 @@ def revenue_by_category():
 
     return render_template('revenue_by_category.html', revenue_by_category=revenue_by_category)
 
-@app.route('price_history/')
+@app.route('/price_history/')
 @app.route('/price_history/<int:product_id>')
 def price_history(product_id = PRODUCT_ID):
     conn = get_db_connection()
