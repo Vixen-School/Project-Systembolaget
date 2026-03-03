@@ -128,8 +128,7 @@ def checkout():
     customer_id = LOGIN_NR
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Slutför köpet (ingen status → vi låter ordern vara kvar)
-    # Enkelt skol-exempel: bara visa bekräftelse
+    # Slutför köpet (Vi tar inte bort innehållet från carten)
     cursor.close()
     conn.close()
 
