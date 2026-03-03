@@ -4,7 +4,7 @@ from connect import connectToDatabase
 from markupsafe import escape
 
 LOGIN_NR = 1 #default customer_id
-PRODUCT_ID = 200 #Default product_id
+PRODUCT_ID = 199 #Default product_id
 
 app = Flask(__name__)
 app.secret_key = "hemligt123"  # behövs för sessioner
